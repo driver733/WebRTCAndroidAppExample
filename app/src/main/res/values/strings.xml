@@ -8,7 +8,7 @@
     <string name="session_offline">Offline</string>
     <string name="session_impossible">Second peer is missing</string>
     <string name="session_ready">Ready to start session</string>
-    <string name="session_creating">Creating session</string>
+    <string name="session_ready_to_join">Session is ready to be joined</string>
     <string name="session_active">Session Active</string>
 
     <string name="button_start_session">Start session</string>

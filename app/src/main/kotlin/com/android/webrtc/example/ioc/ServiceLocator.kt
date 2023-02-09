@@ -26,8 +26,7 @@ object ServiceLocator {
         )
     }
 
-    val eglBaseContext = EglBase.create().eglBaseContext
-
+    val eglBaseContext: EglBase.Context = EglBase.create().eglBaseContext
 
     fun initWithContext(context: Context) {
         this.context = WeakReference<Context>(context)

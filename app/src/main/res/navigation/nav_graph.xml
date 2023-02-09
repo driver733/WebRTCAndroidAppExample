@@ -14,9 +14,7 @@
         <action
             android:id="@+id/action_start_session"
             app:destination="@id/SessionFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/MainFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpTo="@id/MainFragment" />
     </fragment>
     <fragment
         android:id="@+id/SessionFragment"

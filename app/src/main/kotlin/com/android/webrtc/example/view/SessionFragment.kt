@@ -4,10 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.android.webrtc.example.databinding.FragmentSecondBinding
 import com.android.webrtc.example.ioc.ServiceLocator
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 
 /**
@@ -15,10 +20,28 @@ import kotlinx.coroutines.flow.collect
  */
 class SessionFragment : Fragment() {
 
+    private var localVideoJob: Job? = null
+    private var remoteVideoJob: Job? = null
     private var _binding: FragmentSecondBinding? = null
     private val binding get() = _binding!!
 
     private val webRtcSessionManager = ServiceLocator.webRtcSessionManager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
+    }
+
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            findNavController().popBackStack()
+//            findNavController().navigateUp()
+
+//            isEnabled = false
+//            activity?.onBackPressed()
+            remove()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +89,9 @@ class SessionFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
+        localVideoJob?.cancel()
+        remoteVideoJob?.cancel()
+        webRtcSessionManager.onSessionScreenDestroy()
         super.onDestroyView()
     }
 }

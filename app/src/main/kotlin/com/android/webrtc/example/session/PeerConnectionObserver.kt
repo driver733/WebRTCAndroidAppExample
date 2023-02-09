@@ -1,11 +1,6 @@
 package com.android.webrtc.example.session
 
-import org.webrtc.DataChannel
-import org.webrtc.IceCandidate
-import org.webrtc.MediaStream
-import org.webrtc.PeerConnection
-import org.webrtc.RtpTransceiver
-import org.webrtc.SdpObserver
+import org.webrtc.*
 
 /**
  * [PeerConnection.Observer] implementation with default callbacks and ability to override them
@@ -13,7 +8,9 @@ import org.webrtc.SdpObserver
  */
 class PeerConnectionObserver(
     private val onIceCandidateCallback: (IceCandidate) -> Unit = {},
-    private val onTrackCallback: (RtpTransceiver?) -> Unit = {}
+    private val onTrackCallback: (RtpTransceiver?) -> Unit = {},
+    private val onRenegotiationNeededCallback: () -> Unit = {},
+    private val onTrackRemoved: (RtpReceiver?) -> Unit = {},
 ) : PeerConnection.Observer {
     override fun onSignalingChange(p0: PeerConnection.SignalingState?) {
     }
@@ -45,7 +42,13 @@ class PeerConnectionObserver(
     override fun onDataChannel(p0: DataChannel?) {
     }
 
+    override fun onRemoveTrack(receiver: RtpReceiver?) {
+        onTrackRemoved(receiver)
+        super.onRemoveTrack(receiver)
+    }
+
     override fun onRenegotiationNeeded() {
+        onRenegotiationNeededCallback()
     }
 
     // called when the remote track received

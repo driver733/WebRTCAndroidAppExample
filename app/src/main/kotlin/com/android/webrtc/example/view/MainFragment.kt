@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -26,8 +27,26 @@ class MainFragment : Fragment() {
     // getting session manager just to init it via lazy block
     private val webRtcSessionManager = ServiceLocator.webRtcSessionManager
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val manager =
+            requireActivity().supportFragmentManager.fragments.firstOrNull()?.childFragmentManager
+
+        manager?.addOnBackStackChangedListener {
+            val fragments: List<Fragment> = manager.fragments
+            if (fragments.isNotEmpty() && fragments.last() is MainFragment) {
+                System.err.println("MainFragment visible")
+                onSessionFragmentClosed()
+            } else {
+                System.err.println("MainFragment invisible")
+            }
+        }
+    }
+
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
@@ -81,7 +100,7 @@ class MainFragment : Fragment() {
     }
 
     private fun handleCreatingState() {
-        binding.sessionInfoTextView.setText(R.string.session_creating)
+        binding.sessionInfoTextView.setText(R.string.session_ready_to_join)
         binding.startSessionButton.apply {
             setText(R.string.button_join_session)
             isEnabled = true
@@ -92,8 +111,13 @@ class MainFragment : Fragment() {
         binding.sessionInfoTextView.setText(R.string.session_active)
         binding.startSessionButton.apply {
             setText(R.string.button_join_session)
-            isEnabled = false
+            isEnabled = true
         }
+    }
+
+    private fun onSessionFragmentClosed() {
+        handleReadyState()
+        webRtcSessionManager.renegotiate()
     }
 
     override fun onDestroyView() {
