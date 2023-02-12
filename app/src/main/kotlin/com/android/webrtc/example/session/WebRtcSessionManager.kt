@@ -19,7 +19,6 @@ import kotlin.io.path.createTempFile
 import kotlin.io.path.outputStream
 import kotlin.io.path.pathString
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
 
@@ -229,8 +228,7 @@ class WebRtcSessionManager(
             }
         )
 
-    private fun sendAnswer(offer: String) {
-        setRemoteDescriptionToOffer(offer)
+    private fun sendAnswer() {
         peerConnection.createAnswer(
             createAnswerObserver(),
             mediaConstraints
@@ -283,7 +281,8 @@ class WebRtcSessionManager(
     }
 
     private fun onOfferReceived(offer: String) {
-        sendAnswer(offer)
+        setRemoteDescriptionToOffer(offer)
+        sendAnswer()
     }
 
     private fun onAnswerReceived(sdp: String) {
@@ -322,9 +321,7 @@ class WebRtcSessionManager(
                     it?.receiver?.track()?.also { track ->
                         if (track.kind() == VIDEO_TRACK_KIND) {
                             savedTrack = track
-//                            if (onSessionScreenReadyWasCalled) {
                             emitTrackToRemoteVideoSinkFlow(track)
-//                            }
                             println("onTrackCallback() - track added")
                         }
                     }
