@@ -33,7 +33,6 @@ class WebRtcSessionManager(
     private val signalingClient: SignalingClient,
     private val peerConnectionUtils: PeerConnectionUtils
 ) {
-
     private var savedTrack: MediaStreamTrack? = null
     private val sessionManagerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val peerConnectionExecutor = Executors.newSingleThreadExecutor()
@@ -325,10 +324,6 @@ class WebRtcSessionManager(
                             println("onTrackCallback() - track added")
                         }
                     }
-                },
-                onRenegotiationNeededCallback = {
-                    // This is not needed
-//                    renegotiate()
                 },
                 onTrackRemoved = {
                     it?.track()?.also { track ->
