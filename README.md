@@ -18,3 +18,8 @@ In the example above **192.168.31.53** is local ip address of my machine where s
 It will be accessible only inside local network, so only devices connected to the same network will be able to communicate via signaling.
 
 - After everything is done install build and install the app to two android devices and run them.
+
+Command to convert a video to the yuv420p format.
+```shell
+ffmpeg -i bbb.webm -pix_fmt yuv420p converted1.y4m  
+```

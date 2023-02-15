@@ -191,9 +191,9 @@ class WebRtcSessionManager(
             onSessionScreenReadyWasCalled = true
             processSavedTrack()
 
-//            startVideoFileStream()
+            startVideoFileStream()
 //            startFrontCameraStream()
-            startBackCameraStream()
+//            startBackCameraStream()
 
             sendOffer()
         }
@@ -382,14 +382,16 @@ class WebRtcSessionManager(
             ?: error("$cameraErrorTitle camera does not exist")
 
     private fun getFileCapturer(): FileVideoCapturer {
-        val videoFile = copyRawResourceToTempFile(R.raw.sample_video)
+        val videoFile = copyRawResourceToTempFile(R.raw.converted)
+//        val videoFile = copyRawResourceToTempFile(R.raw.sample_video)
 //        val videoFile = copyRawResourceToTempFile(R.raw.bus_orig)
         return FileVideoCapturer(videoFile.pathString)
     }
 
     private fun copyRawResourceToTempFile(id: Int): Path {
         val resourceInputStream = context.resources.openRawResource(id)
-        val tempFile = createTempFile()
+        val tempFile = createTempFile(prefix = "WebRTC", suffix = "video.y4v")
+        println(tempFile.pathString)
         resourceInputStream.use { input ->
             tempFile.outputStream().use { output ->
                 input.copyTo(output)
