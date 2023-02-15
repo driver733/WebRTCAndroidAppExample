@@ -383,8 +383,6 @@ class WebRtcSessionManager(
 
     private fun getFileCapturer(): FileVideoCapturer {
         val videoFile = copyRawResourceToTempFile(R.raw.converted)
-//        val videoFile = copyRawResourceToTempFile(R.raw.sample_video)
-//        val videoFile = copyRawResourceToTempFile(R.raw.bus_orig)
         return FileVideoCapturer(videoFile.pathString)
     }
 
