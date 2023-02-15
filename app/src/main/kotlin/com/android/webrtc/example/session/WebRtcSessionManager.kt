@@ -414,7 +414,8 @@ class WebRtcSessionManager(
         videoSourceType =
             when (videoSourceType) {
                 VideoSourceType.FRONT_CAMERA -> VideoSourceType.BACK_CAMERA
-                VideoSourceType.BACK_CAMERA -> VideoSourceType.FRONT_CAMERA
+                VideoSourceType.BACK_CAMERA -> VideoSourceType.FILE
+                VideoSourceType.FILE -> VideoSourceType.FRONT_CAMERA
             }
     }
 }
@@ -422,5 +423,5 @@ class WebRtcSessionManager(
 private enum class VideoSourceType {
     FRONT_CAMERA,
     BACK_CAMERA,
-//    FILE
+    FILE
 }
